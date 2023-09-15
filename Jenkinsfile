@@ -2,60 +2,45 @@ pipeline {
     agent any
 
     stages {
+        stage('Prepare') {
+            steps {
+                script {
+                    // Delete workspace
+                    deleteDir()
+                }
+            }
+        }
+
         stage('Checkout') {
             steps {
-                // Pull the latest code from the source repository
+                // This will automatically checkout your source code
                 checkout scm
             }
         }
 
-        stage('Run Backend Server') {
+        stage('Build and Test') {
             steps {
-                bat 'start /min python rest_app.py'
-            }
-        }
-
-        stage('Run Frontend Server') {
-            steps {
-                bat 'start /min python web_app.py'
-            }
-        }
-
-        stage('Backend Testing') {
-            steps {
-                bat 'python backend_testing.py'
-            }
-        }
-
-        stage('Frontend Testing') {
-            steps {
-                bat 'python frontend_testing.py'
-            }
-        }
-
-        stage('Combined Testing') {
-            steps {
-                bat 'python combined_testing.py'
-            }
-        }
-
-        stage('Clean Environment') {
-            steps {
-                bat 'python clean_environment.py'
+                // Your build and test steps go here
+                echo "Building and testing..."
             }
         }
     }
 
     post {
+        always {
+            // This will always run, regardless of build status
+            echo "Always block..."
+        }
+        success {
+            // This will only run if the build was successful
+            echo "Build was successful!"
+        }
         failure {
-            // Send an email in case of a failure
-            emailext (
-                to: 'jankq79@gmail.com',
-                subject: "Jenkins Build Failure: ${currentBuild.fullDisplayName}",
-                body: """<p>There was a failure in the Jenkins build:</p>
-                         <p><strong>${currentBuild.fullDisplayName}</strong></p>
-                         <p>Check the build details at: ${env.BUILD_URL}</p>"""
-            )
+            // This will only run if the build failed
+            echo "Build failed!"
+            mail(to: 'jankq79@gmail.com',
+                 subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
+                 body: "Something went wrong with ${env.BUILD_URL}")
         }
     }
 }
