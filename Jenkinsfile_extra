@@ -1,0 +1,60 @@
+pipeline {
+    agent any
+
+    parameters {
+        choice(
+            name: 'TEST_MODE',
+            choices: ['1', '2', '3'],
+            description: 'Select the test mode'
+        )
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Frontend Testing') {
+            when {
+                expression {
+                    return params.TEST_MODE == '1'
+                }
+            }
+            steps {
+                sh 'python frontend_testing.py'
+            }
+        }
+
+        stage('Backend Testing') {
+            when {
+                expression {
+                    return params.TEST_MODE == '2'
+                }
+            }
+            steps {
+                sh 'python backend_testing.py'
+            }
+        }
+
+        stage('Combined Testing') {
+            when {
+                expression {
+                    return params.TEST_MODE == '3'
+                }
+            }
+            steps {
+                sh 'python combined_testing.py'
+            }
+        }
+    }
+
+    post {
+        failure {
+            mail to: 'janqu79@gmail.com',
+                 subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
+                 body: "Check console output at ${env.BUILD_URL} to view the results."
+        }
+    }
+}
