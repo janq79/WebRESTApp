@@ -18,6 +18,12 @@ pipeline {
             }
         }
 
+        stage('Install Dependencies') {
+            steps {
+                sh 'pip install -r requirements.txt'
+            }
+        }
+
         stage('Build and Test') {
             steps {
                 // Your build and test steps go here
