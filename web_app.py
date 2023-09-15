@@ -1,8 +1,14 @@
 from flask import Flask, render_template_string
 import db_connector
+import os
+import signal
 
 app = Flask(__name__)
 
+@app.route('/stop_server')
+def stop_server():
+    os.kill(os.getpid(), signal.SIGINT)  # Użyj SIGINT zamiast CTRL_C_EVENT dla kompatybilności między platformami
+    return 'Server stopped'
 @app.route('/users/get_user_data/<int:user_id>', methods=['GET'])
 def get_user_name(user_id):
     user_name = db_connector.get_user(user_id)

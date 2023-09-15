@@ -1,8 +1,14 @@
 from flask import Flask, request, jsonify
 import db_connector
+import os
+import signal
 
 app = Flask(__name__)
 
+@app.route('/stop_server')
+def stop_server():
+    os.kill(os.getpid(), signal.SIGINT)  # Użyj SIGINT zamiast CTRL_C_EVENT dla kompatybilności między platformami
+    return 'Server stopped'
 @app.route('/users/<int:user_id>', methods=['POST', 'GET', 'PUT', 'DELETE'])
 def handle_user(user_id):
     if request.method == 'POST':
