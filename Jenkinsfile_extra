@@ -7,6 +7,10 @@ pipeline {
             choices: ['1', '2', '3'],
             description: 'Select the test mode'
         )
+        string(name: 'ACTION', defaultValue: 'test', description: 'Action to be performed'),
+        string(name: 'USER_ID', defaultValue: '123', description: 'User ID to be tested'),
+        string(name: 'ELEMENT_ID', defaultValue: 'user', description: 'HTML element ID for the user name on the web page')
+}
     }
 
     stages {
@@ -51,7 +55,7 @@ pipeline {
                 }
             }
             steps {
-                sh 'python combined_testing.py'
+                sh "python combined_testing.py ${params.ACTION} ${params.USER_ID} --element_id ${params.ELEMENT_ID}"
             }
         }
     }
