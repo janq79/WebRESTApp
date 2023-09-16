@@ -20,47 +20,41 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'pip install -r requirements.txt'
+                bat 'pip install -r requirements.txt'
             }
         }
 
         stage('Run Backend Server') {
             steps {
-                script {
-                    bat 'start /min python rest_app.py'
-                    sleep 10 // Wait for server to start up. Adjust time as necessary.
-                }
+                bat 'start /min python rest_app.py'
             }
         }
 
         stage('Run Frontend Server') {
             steps {
-                script {
-                    bat 'start /min python web_app.py'
-                    sleep 10 // Wait for server to start up. Adjust time as necessary.
-                }
+                bat 'start /min python web_app.py'
             }
         }
 
         stage('Run Backend Tests') {
             steps {
-                bat 'python backend_testing.py'
+                bat 'python backend_testing.py get 1'
             }
         }
 
         stage('Run Frontend Tests') {
             steps {
-                bat 'python frontend_testing.py'
+                bat 'python frontend_testing.py get 1'
             }
         }
 
         stage('Run Combined Tests') {
             steps {
-                bat 'python combined_testing.py'
+                bat 'python combined_testing.py get 1'
             }
         }
 
-        stage('Clean Environment') {
+        stage('Cleanup') {
             steps {
                 bat 'python clean_environment.py'
             }
