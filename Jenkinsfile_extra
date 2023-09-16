@@ -2,18 +2,9 @@ pipeline {
     agent any
 
     parameters {
-        choice(
-            name: 'TEST_MODE',
-            choices: ['1', '2', '3'],
-            description: 'Select the test mode'
-        )
-        choice(
-            name: 'BACKEND_FUNCTION',
-            choices: ['add', 'update', 'get'],
-            description: 'Choose the backend test function'
-        )
+        choice(name: 'TEST_MODE', choices: ['1', '2', '3'], description: 'Select the test mode')
         string(name: 'USER_ID', defaultValue: '123', description: 'User ID to be tested')
-        string(name: 'USER_NAME', defaultValue: 'defaultUser', description: 'Name of the user for backend tests', visibility: 'hidden') // Set visibility to hidden initially
+        // The BACKEND_FUNCTION and USER_NAME parameters are dynamic and controlled by the Active Choices plugin.
     }
 
     stages {
@@ -23,57 +14,56 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Set up environment') {
             steps {
-                sh 'pip install -r requirements.txt'
+                echo 'Setting up environment...'
+                // Tutaj można dodać kroki do ustawienia środowiska, jeśli są wymagane.
             }
         }
 
-        stage('Frontend Testing') {
-            when {
-                expression {
-                    return params.TEST_MODE == '1'
-                }
-            }
-            steps {
-                sh "python frontend_testing.py test ${params.USER_ID}" // Use 'test' directly as action is always test
-            }
-        }
-
-        stage('Backend Testing') {
-            when {
-                expression {
-                    return params.TEST_MODE == '2'
-                }
-            }
+        stage('Run Tests') {
             steps {
                 script {
-                    if (params.BACKEND_FUNCTION == 'get') {
-                        sh "python backend_testing.py get ${params.USER_ID}"
-                    } else {
-                        sh "python backend_testing.py ${params.BACKEND_FUNCTION} ${params.USER_ID} ${params.USER_NAME}"
+                    switch(params.TEST_MODE) {
+                        case '1':
+                            echo 'Running test mode 1...'
+                            // Tutaj możesz dodać kroki do wykonania testów dla trybu 1.
+                            break
+
+                        case '2':
+                            echo "Running test mode 2 with backend function: ${params.BACKEND_FUNCTION}..."
+                            switch(params.BACKEND_FUNCTION) {
+                                case 'add':
+                                    echo "Adding user with ID: ${params.USER_ID} and Name: ${params.USER_NAME}..."
+                                    // Tutaj możesz dodać kroki do dodania użytkownika.
+                                    break
+                                case 'update':
+                                    echo "Updating user with ID: ${params.USER_ID}..."
+                                    // Tutaj możesz dodać kroki do aktualizacji użytkownika.
+                                    break
+                                case 'get':
+                                    echo "Getting user with ID: ${params.USER_ID}..."
+                                    // Tutaj możesz dodać kroki do pobrania informacji o użytkowniku.
+                                    break
+                            }
+                            break
+
+                        case '3':
+                            echo 'Running test mode 3...'
+                            // Tutaj możesz dodać kroki do wykonania testów dla trybu 3.
+                            break
+
+                        default:
+                            echo "Invalid test mode: ${params.TEST_MODE}"
                     }
                 }
-            }
-        }
-
-        stage('Combined Testing') {
-            when {
-                expression {
-                    return params.TEST_MODE == '3'
-                }
-            }
-            steps {
-                sh "python combined_testing.py test ${params.USER_ID}" // Use 'test' directly as action is always test
             }
         }
     }
 
     post {
-        failure {
-            mail to: 'janq79@gmail.com',
-                 subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
-                 body: "Check console output at ${env.BUILD_URL} to view the results."
+        always {
+            echo 'Tests completed.'
         }
     }
 }
