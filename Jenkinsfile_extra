@@ -32,7 +32,7 @@ pipeline {
                 }
             }
             steps {
-                sh 'python frontend_testing.py'
+                sh "python frontend_testing.py ${params.ACTION} ${params.USER_ID} --element_id ${params.ELEMENT_ID}"
             }
         }
 
