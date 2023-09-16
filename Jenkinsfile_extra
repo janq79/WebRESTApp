@@ -5,6 +5,7 @@ pipeline {
         choice(
             name: 'TEST_MODE',
             choices: ['1', '2', '3'],
+            choices: ['add', 'update', 'get'],
             description: 'Select the test mode'
         )
         string(name: 'ACTION', defaultValue: 'test', description: 'Action to be performed')
@@ -43,7 +44,13 @@ pipeline {
                 }
             }
             steps {
-                sh 'python backend_testing.py'
+                script {
+                    if (params.BACKEND_FUNCTION == 'get') {
+                        sh "python backend_testing.py get ${params.USER_ID}"
+                    } else {
+                        sh "python backend_testing.py ${params.BACKEND_FUNCTION} ${params.USER_ID} ${params.ELEMENT_ID}"
+                    }
+                }
             }
         }
 
