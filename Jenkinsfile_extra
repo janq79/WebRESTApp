@@ -27,7 +27,7 @@ pipeline {
                 }
             }
             steps {
-                sh "python frontend_testing.py ${params.USER_ID}"
+                sh "python frontend_testing.py test ${params.USER_ID}"
             }
         }
 
@@ -55,7 +55,7 @@ pipeline {
                 }
             }
             steps {
-                sh "python combined_testing.py ${params.USER_ID}"
+                sh "python combined_testing.py test ${params.USER_ID}"
             }
         }
     }
