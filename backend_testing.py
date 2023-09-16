@@ -27,6 +27,7 @@ def test_add_user(user_id, user_name):
     response = requests.post(API_URL + str(user_id), json=payload)
     if response.status_code not in [200, 201] or response.json().get("user_added") != user_name:
         raise Exception(f"Test failed during ADD: {response.json()}")
+    return user_id
 
 
 
@@ -66,7 +67,7 @@ if __name__ == "__main__":
     user_name = sys.argv[3] if len(sys.argv) > 3 else None
 
     if function_name == "add":
-        test_add_user(user_id, user_name)
+        user_id = test_add_user(user_id, user_name)
         verify_database_data(user_id, user_name)
         print("User added successfully!")
     elif function_name == "update":
