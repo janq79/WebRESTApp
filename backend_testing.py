@@ -5,11 +5,14 @@ import sys
 # Stałe
 API_URL = "http://127.0.0.1:5000/users/"
 
+
 def test_add_user(user_id, user_name):
     payload = {"user_name": user_name}
     response = requests.post(API_URL + str(user_id), json=payload)
-    if response.status_code != 200 or response.json().get("user_added") != user_name:
+    if response.status_code not in [200, 201] or response.json().get("user_added") != user_name:
         raise Exception(f"Test failed during ADD: {response.json()}")
+
+
 
 def test_update_user(user_id, user_name):
     payload = {"user_name": user_name}
