@@ -5,8 +5,12 @@ pipeline {
         choice(
             name: 'TEST_MODE',
             choices: ['1', '2', '3'],
-            choices: ['add', 'update', 'get'],
             description: 'Select the test mode'
+        )
+        choice(
+            name: 'BACKEND_FUNCTION',
+            choices: ['add', 'update', 'get'],
+            description: 'Choose the backend test function'
         )
         string(name: 'ACTION', defaultValue: 'test', description: 'Action to be performed')
         string(name: 'USER_ID', defaultValue: '123', description: 'User ID to be tested')
