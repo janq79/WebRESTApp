@@ -44,13 +44,13 @@ pipeline {
 
         stage('Run Frontend Tests') {
             steps {
-                bat 'python frontend_testing.py get 1'
+                bat 'python frontend_testing.py test 1'
             }
         }
 
         stage('Run Combined Tests') {
             steps {
-                bat 'python combined_testing.py get 1'
+                bat 'python combined_testing.py test 1'
             }
         }
 
