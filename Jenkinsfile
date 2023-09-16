@@ -24,10 +24,45 @@ pipeline {
             }
         }
 
-        stage('Build and Test') {
+        stage('Run Backend Server') {
             steps {
-                // Your build and test steps go here
-                echo "Building and testing..."
+                script {
+                    bat 'start /min python rest_app.py'
+                    sleep 10 // Wait for server to start up. Adjust time as necessary.
+                }
+            }
+        }
+
+        stage('Run Frontend Server') {
+            steps {
+                script {
+                    bat 'start /min python web_app.py'
+                    sleep 10 // Wait for server to start up. Adjust time as necessary.
+                }
+            }
+        }
+
+        stage('Run Backend Tests') {
+            steps {
+                bat 'python backend_testing.py'
+            }
+        }
+
+        stage('Run Frontend Tests') {
+            steps {
+                bat 'python frontend_testing.py'
+            }
+        }
+
+        stage('Run Combined Tests') {
+            steps {
+                bat 'python combined_testing.py'
+            }
+        }
+
+        stage('Clean Environment') {
+            steps {
+                bat 'python clean_environment.py'
             }
         }
     }
