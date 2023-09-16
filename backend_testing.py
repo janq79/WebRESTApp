@@ -7,6 +7,22 @@ API_URL = "http://127.0.0.1:5000/users/"
 
 
 def test_add_user(user_id, user_name):
+    response = requests.get(API_URL + str(user_id))
+
+    # Jeśli odpowiedź wskazuje na to, że użytkownik z podanym ID już istnieje
+    if response.status_code == 200:
+        print(f"User ID {user_id} is already taken.")
+
+        # Spróbuj znaleźć pierwsze wolne ID
+        temp_id = user_id
+        while True:
+            temp_id += 1
+            response = requests.get(API_URL + str(temp_id))
+            if response.status_code == 404:  # Jeśli status code jest 404, oznacza to, że ID jest wolne
+                user_id = temp_id
+                print(f"Assigning new User ID: {user_id}")
+                break
+
     payload = {"user_name": user_name}
     response = requests.post(API_URL + str(user_id), json=payload)
     if response.status_code not in [200, 201] or response.json().get("user_added") != user_name:
