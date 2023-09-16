@@ -20,6 +20,18 @@ pipeline {
             }
         }
 
+        stage('Run Backend Server') {
+            steps {
+                bat 'start /min python rest_app.py'
+            }
+        }
+
+        stage('Run Frontend Server') {
+            steps {
+                bat 'start /min python web_app.py'
+            }
+        }
+
         stage('Frontend Testing') {
             when {
                 expression {
