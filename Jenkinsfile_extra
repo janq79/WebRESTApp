@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     parameters {
-        choice(name: 'TEST_MODE', choices: ['1', '2', '3'], description: 'Select the test mode')
+        choice(name: 'TEST_MODE', choices: ['3','2','1'], description: 'Select the test mode')
         string(name: 'USER_ID', defaultValue: '123', description: 'User ID to be tested')
         // BACKEND_FUNCTION i USER_NAME są ustawione dynamicznie w UI Jenkinsa
     }
