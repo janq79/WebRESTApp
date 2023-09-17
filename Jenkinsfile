@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    parameters {
+        string(name: 'USER_ID', defaultValue: '1', description: 'User ID for tests')
+    }
+
     stages {
         stage('Prepare') {
             steps {
@@ -38,19 +42,19 @@ pipeline {
 
         stage('Run Backend Tests') {
             steps {
-                bat 'python backend_testing.py get 1'
+                bat "python backend_testing.py get ${params.USER_ID}"
             }
         }
 
         stage('Run Frontend Tests') {
             steps {
-                bat 'python frontend_testing.py test 1'
+                bat "python frontend_testing.py get ${params.USER_ID}"
             }
         }
 
         stage('Run Combined Tests') {
             steps {
-                bat 'python combined_testing.py test 1'
+                bat "python combined_testing.py get ${params.USER_ID}"
             }
         }
 
