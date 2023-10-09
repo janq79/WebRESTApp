@@ -4,8 +4,8 @@ from pymysql.cursors import DictCursor
 
 # W prawdziwej aplikacji warto przenieść te dane do pliku konfiguracyjnego lub zmiennych środowiskowych.
 CONFIG = {
-    'host': '127.0.0.1',
-    'port': 3309,
+    'host': 'db',
+    'port': 3306,
     'user': 'user',
     'password': 'password',
     'db': 'mydb'

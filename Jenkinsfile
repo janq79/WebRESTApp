@@ -48,13 +48,13 @@ pipeline {
 
         stage('Run Frontend Tests') {
             steps {
-                bat "python frontend_testing.py get ${params.USER_ID}"
+                bat "python frontend_testing.py test ${params.USER_ID}"
             }
         }
 
         stage('Run Combined Tests') {
             steps {
-                bat "python combined_testing.py get ${params.USER_ID}"
+                bat "python combined_testing.py test ${params.USER_ID}"
             }
         }
 
