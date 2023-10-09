@@ -1,20 +1,38 @@
 import pymysql
 import datetime
+import os
 from pymysql.cursors import DictCursor
+
 
 # W prawdziwej aplikacji warto przenieść te dane do pliku konfiguracyjnego lub zmiennych środowiskowych.
 CONFIG = {
-    'host': 'db',
-    'port': 3306,
-    'user': 'user',
-    'password': 'password',
-    'db': 'mydb'
+    'docker': {
+        'host': 'db',
+        'port': 3306,
+        'user': 'user',
+        'password': 'password',
+        'db': 'mydb'
+    },
+    'localhost': {
+        'host': '127.0.0.1',
+        'port': 3309,
+        'user': 'user',
+        'password': 'password',
+        'db': 'mydb'
+    }
 }
+
+is_running_in_docker = os.environ.get("RUNNING_IN_DOCKER") == "True"
+
+if is_running_in_docker:
+    CURRENT_CONFIG = CONFIG['docker']
+else:
+    CURRENT_CONFIG = CONFIG['localhost']
 
 # Prosta pula połączeń
 class ConnectionPool:
     def __init__(self):
-        self.connection = pymysql.connect(**CONFIG, cursorclass=DictCursor, autocommit=True)
+        self.connection = pymysql.connect(**CURRENT_CONFIG, cursorclass=DictCursor, autocommit=True)
 
     def get_connection(self):
         return self.connection

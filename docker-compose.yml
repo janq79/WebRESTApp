@@ -6,6 +6,7 @@ services:
     ports:
       - "5000:5000"
     environment:
+      - RUNNING_IN_DOCKER=True
       - DATABASE_HOST=db
       - DATABASE_PORT=3306
       - DATABASE_USER=${DATABASE_USER}
