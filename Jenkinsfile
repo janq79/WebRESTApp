@@ -9,7 +9,6 @@ pipeline {
         stage('Prepare') {
             steps {
                 script {
-                    // Delete workspace
                     deleteDir()
                 }
             }
@@ -17,65 +16,76 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                // This will automatically checkout your source code
                 checkout scm
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                bat 'pip install -r requirements.txt'
+                sh 'pip install -r requirements.txt'
             }
         }
 
         stage('Run Backend Server') {
             steps {
-                bat 'start /min python rest_app.py'
+                sh 'nohup python rest_app.py &'
             }
         }
 
         stage('Run Frontend Server') {
             steps {
-                bat 'start /min python web_app.py'
+                sh 'nohup python web_app.py &'
             }
         }
 
         stage('Run Backend Tests') {
             steps {
-                bat "python backend_testing.py get ${params.USER_ID}"
+                sh "python backend_testing.py get ${params.USER_ID}"
             }
         }
 
         stage('Run Frontend Tests') {
             steps {
-                bat "python frontend_testing.py test ${params.USER_ID}"
+                sh "python frontend_testing.py test ${params.USER_ID}"
             }
         }
 
         stage('Run Combined Tests') {
             steps {
-                bat "python combined_testing.py test ${params.USER_ID}"
+                sh "python combined_testing.py test ${params.USER_ID}"
             }
         }
 
-        stage('Cleanup') {
+        stage('Build Docker Image') {
             steps {
-                bat 'python clean_environment.py'
+                sh 'docker-compose build'
+            }
+        }
+
+        stage('Run docker-compose up') {
+            steps {
+                sh 'docker-compose up -d'
+            }
+        }
+
+        stage('Test Dockerized App') {
+            steps {
+                sh "python docker_backend_testing.py get ${params.USER_ID}"
             }
         }
     }
 
     post {
         always {
-            // This will always run, regardless of build status
-            echo "Always block..."
+            sh 'python clean_environment.py'
+            sh 'docker-compose down'
+            sh 'docker rmi myapp:${BUILD_NUMBER}'
+            echo "Always block executed..."
         }
         success {
-            // This will only run if the build was successful
             echo "Build was successful!"
         }
         failure {
-            // This will only run if the build failed
             echo "Build failed!"
             mail(to: 'janq79@gmail.com',
                  subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
