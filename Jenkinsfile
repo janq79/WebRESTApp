@@ -38,6 +38,18 @@ pipeline {
             }
         }
 
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker-compose build'
+            }
+        }
+
+        stage('Run docker-compose up') {
+            steps {
+                sh 'docker-compose up -d'
+            }
+        }
+
         stage('Run Backend Tests') {
             steps {
                 sh "python backend_testing.py get ${params.USER_ID}"
@@ -53,18 +65,6 @@ pipeline {
         stage('Run Combined Tests') {
             steps {
                 sh "python combined_testing.py test ${params.USER_ID}"
-            }
-        }
-
-        stage('Build Docker Image') {
-            steps {
-                sh 'docker-compose build'
-            }
-        }
-
-        stage('Run docker-compose up') {
-            steps {
-                sh 'docker-compose up -d'
             }
         }
 
