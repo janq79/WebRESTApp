@@ -11,8 +11,6 @@ services:
       - DATABASE_USER=${DATABASE_USER}
       - DATABASE_PASSWORD=${DATABASE_PASSWORD}
       - DATABASE_NAME=${DATABASE_NAME}
-    depends_on:
-      - db
     command: ["/app/wait-for-it.sh", "--timeout=60", "db:3306", "--", "python", "rest_app.py"]
 
   db:
