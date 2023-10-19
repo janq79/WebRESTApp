@@ -38,6 +38,12 @@ pipeline {
             }
         }
 
+        stage('Check docker containers') {
+            steps {
+                sh 'docker ps'
+            }
+        }
+
         stage('Check Database Logs') {
             steps {
                 sh 'docker logs webrestapp_db_1'
