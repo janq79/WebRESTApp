@@ -40,13 +40,13 @@ pipeline {
 
         stage('Check Database Logs') {
             steps {
-                sh 'docker logs db'
+                sh 'docker logs webrestapp_db_1'
             }
         }
 
         stage('Check Database Connection') {
             steps {
-                sh 'docker exec -it db mysql -u${DATABASE_USER} -p${DATABASE_PASSWORD} -e "SHOW DATABASES;"'
+                sh 'docker exec -it webrestapp_db_1 mysql -u${DATABASE_USER} -p${DATABASE_PASSWORD} -e "SHOW DATABASES;"'
             }
         }
 
