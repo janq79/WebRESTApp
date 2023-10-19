@@ -38,6 +38,18 @@ pipeline {
             }
         }
 
+        stage('Check Database Logs') {
+            steps {
+                sh 'docker logs db'
+            }
+        }
+
+        stage('Check Database Connection') {
+            steps {
+                sh 'docker exec -it db mysql -u${DATABASE_USER} -p${DATABASE_PASSWORD} -e "SHOW DATABASES;"'
+            }
+        }
+
         stage('Run Backend Server') {
             steps {
                 sh 'nohup python rest_app.py &'
