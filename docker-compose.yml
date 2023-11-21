@@ -13,6 +13,11 @@ services:
       - "3309:3306"
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
 
   web:
     build: .
@@ -24,5 +29,7 @@ services:
       - DATABASE_USER=${DATABASE_USER}
       - DATABASE_PASSWORD=${DATABASE_PASSWORD}
       - DATABASE_NAME=${DATABASE_NAME}
-    command: ["dockerize", "-wait", "tcp://db:3306", "-timeout", "30s", "python", "rest_app.py"]
-   # command: ["/app/wait-for-it.sh", "--timeout=60", "db:3306", "--", "python", "rest_app.py"]
+    command: ["python", "rest_app.py"]
+    depends_on:
+      db:
+        condition: service_healthy
