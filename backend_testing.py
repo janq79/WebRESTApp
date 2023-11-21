@@ -4,7 +4,10 @@ import sys
 import os
 
 # Stałe
-API_URL = os.environ.get("API_URL", "http://127.0.0.1:5000")
+if db_connector.is_running_in_docker:
+    API_URL = f"http://{db_connector.CURRENT_CONFIG['host']}:{db_connector.CURRENT_CONFIG['port']}/users/"
+else:
+    API_URL = "http://127.0.0.1:5000/users/"
 
 
 def test_add_user(user_id, user_name):
