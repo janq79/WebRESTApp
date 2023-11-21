@@ -10,12 +10,11 @@ if db_connector.is_running_in_docker:
 else:
     WEB_INTERFACE_URL = "http://127.0.0.1:5001/users/get_user_data/"
 
-
 def test_frontend(user_id, element_id):
-    # Uruchomienie przeglądarki
-    driver = webdriver.Chrome()
-
     try:
+        # Uruchomienie przeglądarki
+        driver = webdriver.Chrome()
+
         # Nawigacja do interfejsu webowego
         driver.get(WEB_INTERFACE_URL + str(user_id))
 
@@ -27,7 +26,6 @@ def test_frontend(user_id, element_id):
     finally:
         # Zamknięcie przeglądarki
         driver.quit()
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Frontend Testing for Web App")
