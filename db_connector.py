@@ -2,6 +2,7 @@ import pymysql
 import datetime
 import os
 from pymysql.cursors import DictCursor
+from time import sleep
 
 
 # W prawdziwej aplikacji warto przenieść te dane do pliku konfiguracyjnego lub zmiennych środowiskowych.
@@ -28,6 +29,24 @@ if is_running_in_docker:
     CURRENT_CONFIG = CONFIG['docker']
 else:
     CURRENT_CONFIG = CONFIG['localhost']
+
+def wait_for_db():
+    max_retries = 30
+    retries = 0
+    while retries < max_retries:
+        try:
+            pymysql.connect(**CURRENT_CONFIG, cursorclass=DictCursor, autocommit=True)
+            print("Connected to the database!")
+            break
+        except pymysql.OperationalError as e:
+            print(f"Database connection failed: {e}")
+            retries += 1
+            sleep(5)  # Czekaj 5 sekund przed kolejną próbą
+    else:
+        print("Unable to connect to the database. Exiting...")
+        exit(1)
+
+wait_for_db()  # Wywołanie funkcji wait_for_db()
 
 # Prosta pula połączeń
 class ConnectionPool:
