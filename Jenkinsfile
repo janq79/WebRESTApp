@@ -40,7 +40,7 @@ pipeline {
 
         stage('Check docker containers') {
             steps {
-                sh 'docker ps'
+                sh 'docker ps -a'
             }
         }
 
