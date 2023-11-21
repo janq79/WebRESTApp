@@ -1,5 +1,6 @@
 import argparse
 import db_connector
+import shutil
 from selenium import webdriver
 
 # Stałe
@@ -11,6 +12,13 @@ else:
     WEB_INTERFACE_URL = "http://127.0.0.1:5001/users/get_user_data/"
 
 def test_frontend(user_id, element_id):
+    # Sprawdź dostępność chromedriver
+    chromedriver_path = shutil.which("chromedriver")
+    if chromedriver_path:
+        print(f"Chromedriver found at: {chromedriver_path}")
+    else:
+        print("Chromedriver not found. Please check your PATH environment variable.")
+
     try:
         # Uruchomienie przeglądarki
         driver = webdriver.Chrome()
