@@ -1,9 +1,10 @@
 import requests
 import db_connector
 import sys
+import os
 
 # Stałe
-API_URL = "http://127.0.0.1:5000/users/"
+API_URL = os.environ.get("API_URL", "http://127.0.0.1:5000")
 
 
 def test_add_user(user_id, user_name):
