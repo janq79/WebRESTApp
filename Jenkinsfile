@@ -57,14 +57,14 @@ pipeline {
         }
 
 
-
+    /*
         stage('Check Database Connection') {
             steps {
                 sh "docker exec flaskapp_ci_pipeline_db_1 mysql -u${DATABASE_USER} -p${DATABASE_PASSWORD} -e 'SHOW DATABASES;'"
             }
         }
 
-   /*
+
         stage('Run Backend Server') {
             steps {
                 sh 'nohup python rest_app.py &'
