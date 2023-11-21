@@ -50,6 +50,14 @@ pipeline {
             }
         }
 
+        stage('Check application Logs Logs') {
+            steps {
+                sh 'docker logs flaskapp_ci_pipeline_web_1'
+            }
+        }
+
+
+
         stage('Check Database Connection') {
             steps {
                 sh "docker exec flaskapp_ci_pipeline_db_1 mysql -u${DATABASE_USER} -p${DATABASE_PASSWORD} -e 'SHOW DATABASES;'"
