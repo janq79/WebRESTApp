@@ -56,11 +56,13 @@ pipeline {
             }
         }
 
+   /*
         stage('Run Backend Server') {
             steps {
                 sh 'nohup python rest_app.py &'
             }
         }
+   */
 
         stage('Run Frontend Server') {
             steps {
