@@ -95,19 +95,14 @@ pipeline {
                 sh "python combined_testing.py test ${params.USER_ID}"
             }
         }
-
-   /*
-
+    /*
         stage('Test Dockerized App') {
             steps {
                 sh "python docker_backend_testing.py get ${params.USER_ID}"
             }
         }
-   */
-
-   }
-
-
+    */
+    }
 
     post {
         always {
