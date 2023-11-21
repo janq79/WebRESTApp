@@ -1,8 +1,14 @@
 import argparse
+import db_connector
 from selenium import webdriver
 
 # Stałe
-WEB_INTERFACE_URL = "http://127.0.0.1:5001/users/get_user_data/"
+# WEB_INTERFACE_URL = "http://127.0.0.1:5001/users/get_user_data/"
+
+if db_connector.is_running_in_docker:
+    WEB_INTERFACE_URL = f"http://{db_connector.CURRENT_CONFIG['host']}:{db_connector.CURRENT_CONFIG['port']}/users/"
+else:
+    WEB_INTERFACE_URL = "http://127.0.0.1:5001/users/get_user_data/"
 
 
 def test_frontend(user_id, element_id):
