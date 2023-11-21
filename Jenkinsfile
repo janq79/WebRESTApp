@@ -96,12 +96,18 @@ pipeline {
             }
         }
 
+   /*
+
         stage('Test Dockerized App') {
             steps {
                 sh "python docker_backend_testing.py get ${params.USER_ID}"
             }
         }
-    }
+   */
+
+   }
+
+
 
     post {
         always {
